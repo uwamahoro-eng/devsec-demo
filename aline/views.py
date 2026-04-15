@@ -10,6 +10,7 @@ from django.utils.decorators import method_decorator
 from django.db import transaction
 from django.http import HttpResponseForbidden
 from django.core.paginator import Paginator
+from django.core.cache import cache
 
 from .forms import (
     CustomUserCreationForm,
@@ -102,13 +103,44 @@ class LoginView(View):
         return render(request, self.template_name, {'form': form})
     
     def post(self, request, *args, **kwargs):
+        username = request.POST.get('username')
+        ip_address = request.META.get('REMOTE_ADDR')
+        
+        # Keys for rate limiting
+        user_key = f'login_attempts:user:{username}'
+        ip_key = f'login_attempts:ip:{ip_address}'
+        
+        # Check for lockout
+        user_attempts = cache.get(user_key, 0)
+        ip_attempts = cache.get(ip_key, 0)
+        
+        MAX_ATTEMPTS = 5
+        TIMEOUT = 600  # 10 minutes
+        
+        if user_attempts >= MAX_ATTEMPTS or ip_attempts >= MAX_ATTEMPTS:
+            messages.error(request, 'Too many failed login attempts. Please try again in 10 minutes.')
+            return render(request, self.template_name, {
+                'form': self.form_class(),
+                'lockout': True
+            })
+
         form = self.form_class(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
+            
+            # Reset attempts on success
+            cache.delete(user_key)
+            cache.delete(ip_key)
+            
             messages.success(request, f'Welcome back, {user.username}!')
             next_url = request.GET.get('next') or request.POST.get('next') or reverse_lazy('aline:dashboard')
             return redirect(next_url)
+            
+        # Increment attempts on failure
+        cache.set(user_key, user_attempts + 1, TIMEOUT)
+        cache.set(ip_key, ip_attempts + 1, TIMEOUT)
+        
         messages.error(request, 'Invalid username/email or password.')
         return render(request, self.template_name, {'form': form})
 

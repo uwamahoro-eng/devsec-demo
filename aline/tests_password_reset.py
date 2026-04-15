@@ -82,14 +82,19 @@ class PasswordResetTestCase(TestCase):
         uid = urlsafe_base64_encode(force_bytes(self.user.pk))
         token = default_token_generator.make_token(self.user)
         
-        # First get to validate token and get the session-based URL
+        # 1. GET the token URL (Django validates token and stores user in session)
         confirm_url = reverse('aline:password_reset_confirm', kwargs={
             'uidb64': uid,
             'token': token
         })
+        response = self.client.get(confirm_url, follow=True)
+        self.assertEqual(response.status_code, 200)
         
-        # Post new password (follow redirects to reach the final success page)
-        response = self.client.post(confirm_url, {
+        # 2. POST to the same URL (which is now the session-based set-password URL)
+        # Note: We must use the last URL in the chain if there was a redirect
+        final_url = response.request.get('PATH_INFO')
+        
+        response = self.client.post(final_url, {
             'new_password1': 'NewSecurePass123!',
             'new_password2': 'NewSecurePass123!'
         }, follow=True)
@@ -98,6 +103,6 @@ class PasswordResetTestCase(TestCase):
         self.assertTrue(any(res[0].endswith(reverse('aline:password_reset_complete')) for res in response.redirect_chain))
         self.assertContains(response, 'Password Reset Complete')
         
-        # Verify login with new password
+        # 3. Verify login with new password
         login_success = self.client.login(username='testuser', password='NewSecurePass123!')
         self.assertTrue(login_success)
