@@ -4,7 +4,7 @@
 
 ```
 devsec-demo/
-├── aline_uwamahoro/
+├── aline/
 │   ├── models.py              ✅ UserProfile model
 │   ├── forms.py               ✅ 4 authentication forms
 │   ├── views.py               ✅ 7 views (registration, login, etc.)
@@ -16,7 +16,7 @@ devsec-demo/
 │   ├── management/
 │   │   └── commands/
 │   │       └── create_sample_students.py  ✅ Sample data CLI
-│   └── templates/aline_uwamahoro/
+│   └── templates/aline/
 │       ├── base.html          ✅ Template inheritance
 │       ├── home.html          ✅ Public page
 │       ├── register.html      ✅ Registration
@@ -46,7 +46,7 @@ python manage.py create_sample_students
 python manage.py runserver
 
 # 4. Run tests
-python manage.py test aline_uwamahoro.tests
+python manage.py test aline.tests
 
 # 5. Access application
 # Home: http://localhost:8000/
@@ -263,7 +263,7 @@ Status: ALL PASS ✅
 
 ### 5. URLs
 
-- Namespace: 'aline_uwamahoro'
+- Namespace: 'aline'
 - RESTful routing
 - Reverse URL lookups
 

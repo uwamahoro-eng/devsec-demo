@@ -39,12 +39,12 @@ class Command(BaseCommand):
             
             if created:
                 self.stdout.write(
-                    self.style.SUCCESS(f'✓ Created group: {role_name}')
+                    self.style.SUCCESS('[+] Created group: {}'.format(role_name))
                 )
-                self.stdout.write(f'  Description: {description}')
+                self.stdout.write('    Description: {}'.format(description))
             else:
                 self.stdout.write(
-                    self.style.WARNING(f'✓ Group already exists: {role_name}')
+                    self.style.WARNING('[*] Group already exists: {}'.format(role_name))
                 )
 
         # Get content types for permissions
@@ -100,7 +100,7 @@ class Command(BaseCommand):
                         continue
 
                 group.permissions.add(perm)
-                self.stdout.write(f'  ✓ {perm.name}')
+                self.stdout.write(f'  - {perm.name}')
 
         self.stdout.write(self.style.SUCCESS('\n' + '='*60))
         self.stdout.write(self.style.SUCCESS('RBAC Setup Complete!'))

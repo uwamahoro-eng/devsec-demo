@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'aline_uwamahoro',  # Our authentication app
+    'aline',  # Our authentication app
 ]
 
 MIDDLEWARE = [
@@ -122,9 +122,9 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 # Authentication and redirection settings
-LOGIN_URL = 'aline_uwamahoro:login'  # Redirect to login if not authenticated
-LOGIN_REDIRECT_URL = 'aline_uwamahoro:dashboard'  # After login, go to dashboard
-LOGOUT_REDIRECT_URL = 'aline_uwamahoro:home'  # After logout, go to home
+LOGIN_URL = 'aline:login'  # Redirect to login if not authenticated
+LOGIN_REDIRECT_URL = 'aline:dashboard'  # After login, go to dashboard
+LOGOUT_REDIRECT_URL = 'aline:home'  # After logout, go to home
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

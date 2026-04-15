@@ -67,9 +67,9 @@ class RoleBasedAccessControlTestCase(TestCase):
 
     def test_get_user_role_anonymous(self):
         """Test role detection for anonymous users."""
-        request = type('Request', (), {'user': User()})
-        request.user.is_authenticated = False
-        self.assertEqual(get_user_role(request.user), 'anonymous')
+        from django.contrib.auth.models import AnonymousUser
+        user = AnonymousUser()
+        self.assertEqual(get_user_role(user), 'anonymous')
 
     def test_get_user_role_student(self):
         """Test role detection for student users."""

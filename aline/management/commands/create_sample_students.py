@@ -10,7 +10,7 @@ Usage:
 
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
-from aline_uwamahoro.models import UserProfile
+from aline.models import UserProfile
 
 
 class Command(BaseCommand):

@@ -85,52 +85,52 @@ A production-ready User Authentication Service has been successfully implemented
 
 | File                                         | Changes                                                               |
 | -------------------------------------------- | --------------------------------------------------------------------- |
-| `aline_uwamahoro/models.py`                  | Created UserProfile model with fields for student ID, phone, DOB, bio |
-| `aline_uwamahoro/migrations/0001_initial.py` | Migration for UserProfile table                                       |
+| `aline/models.py`                  | Created UserProfile model with fields for student ID, phone, DOB, bio |
+| `aline/migrations/0001_initial.py` | Migration for UserProfile table                                       |
 
 ### Forms
 
 | File                       | Changes                                                                                                      |
 | -------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `aline_uwamahoro/forms.py` | Created 4 forms: CustomUserCreationForm, CustomAuthenticationForm, CustomPasswordChangeForm, UserProfileForm |
+| `aline/forms.py` | Created 4 forms: CustomUserCreationForm, CustomAuthenticationForm, CustomPasswordChangeForm, UserProfileForm |
 
 ### Views
 
 | File                       | Changes                                                                                                        |
 | -------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| `aline_uwamahoro/views.py` | Created 7 views: HomeView, RegisterView, LoginView, LogoutView, DashboardView, ProfileView, PasswordChangeView |
+| `aline/views.py` | Created 7 views: HomeView, RegisterView, LoginView, LogoutView, DashboardView, ProfileView, PasswordChangeView |
 
 ### URLs & Routing
 
 | File                      | Changes                                   |
 | ------------------------- | ----------------------------------------- |
-| `aline_uwamahoro/urls.py` | Created with 7 URL patterns for auth flow |
+| `aline/urls.py` | Created with 7 URL patterns for auth flow |
 | `devsec_demo/urls.py`     | Updated to include app URLs               |
 
 ### Templates
 
 | File                                                             | Purpose                                            |
 | ---------------------------------------------------------------- | -------------------------------------------------- |
-| `aline_uwamahoro/templates/aline_uwamahoro/base.html`            | Base template with Bootstrap 5, navigation, footer |
-| `aline_uwamahoro/templates/aline_uwamahoro/home.html`            | Public home page                                   |
-| `aline_uwamahoro/templates/aline_uwamahoro/register.html`        | Registration form with validation display          |
-| `aline_uwamahoro/templates/aline_uwamahoro/login.html`           | Login form with demo credentials info              |
-| `aline_uwamahoro/templates/aline_uwamahoro/dashboard.html`       | Protected dashboard with quick actions             |
-| `aline_uwamahoro/templates/aline_uwamahoro/profile.html`         | Protected profile view/edit form                   |
-| `aline_uwamahoro/templates/aline_uwamahoro/password_change.html` | Protected password change form                     |
+| `aline/templates/aline/base.html`            | Base template with Bootstrap 5, navigation, footer |
+| `aline/templates/aline/home.html`            | Public home page                                   |
+| `aline/templates/aline/register.html`        | Registration form with validation display          |
+| `aline/templates/aline/login.html`           | Login form with demo credentials info              |
+| `aline/templates/aline/dashboard.html`       | Protected dashboard with quick actions             |
+| `aline/templates/aline/profile.html`         | Protected profile view/edit form                   |
+| `aline/templates/aline/password_change.html` | Protected password change form                     |
 
 ### Admin & Management
 
 | File                                                            | Changes                                            |
 | --------------------------------------------------------------- | -------------------------------------------------- |
-| `aline_uwamahoro/admin.py`                                      | Registered UserProfile with custom admin interface |
-| `aline_uwamahoro/management/commands/create_sample_students.py` | Created CLI command for sample data                |
+| `aline/admin.py`                                      | Registered UserProfile with custom admin interface |
+| `aline/management/commands/create_sample_students.py` | Created CLI command for sample data                |
 
 ### Tests
 
 | File                       | Changes                                      |
 | -------------------------- | -------------------------------------------- |
-| `aline_uwamahoro/tests.py` | Created 24+ test cases covering all features |
+| `aline/tests.py` | Created 24+ test cases covering all features |
 
 ### Configuration
 
@@ -197,7 +197,7 @@ Password: user@123
 ### 4. Run Tests
 
 ```bash
-python manage.py test aline_uwamahoro.tests
+python manage.py test aline.tests
 ```
 
 ---

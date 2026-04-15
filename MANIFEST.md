@@ -12,7 +12,7 @@
 
 ### Core Application Files
 
-#### Models (`aline_uwamahoro/models.py`)
+#### Models (`aline/models.py`)
 
 **Status**: ✅ Created  
 **Lines**: 52  
@@ -28,7 +28,7 @@
   - Meta: ordering, verbose names
   - Methods: `__str__()`, `get_full_name()`
 
-#### Forms (`aline_uwamahoro/forms.py`)
+#### Forms (`aline/forms.py`)
 
 **Status**: ✅ Created  
 **Lines**: 268  
@@ -56,7 +56,7 @@
    - Bio textarea
    - Save to User + UserProfile
 
-#### Views (`aline_uwamahoro/views.py`)
+#### Views (`aline/views.py`)
 
 **Status**: ✅ Created  
 **Lines**: 218  
@@ -78,7 +78,7 @@
 - Error handling and validation
 - Redirect logic
 
-#### URLs (`aline_uwamahoro/urls.py`)
+#### URLs (`aline/urls.py`)
 
 **Status**: ✅ Created  
 **Lines**: 25  
@@ -94,7 +94,7 @@
 /change-password/          → PasswordChangeView (protected)
 ```
 
-#### Admin (`aline_uwamahoro/admin.py`)
+#### Admin (`aline/admin.py`)
 
 **Status**: ✅ Registered  
 **Lines**: 40  
@@ -107,7 +107,7 @@
 - Readonly timestamps
 - Disabled add_permission (created via registration)
 
-#### Tests (`aline_uwamahoro/tests.py`)
+#### Tests (`aline/tests.py`)
 
 **Status**: ✅ Created  
 **Lines**: 390+  
@@ -121,19 +121,19 @@
 
 ### Database & Migrations
 
-#### Migration File (`aline_uwamahoro/migrations/0001_initial.py`)
+#### Migration File (`aline/migrations/0001_initial.py`)
 
 **Status**: ✅ Created  
 **Content**:
 
-- Creates `aline_uwamahoro_userprofile` table
+- Creates `aline_userprofile` table
 - Fields: id, user_id (FK), student_id, date_of_birth, phone_number, bio, created_at, updated_at
 - Indexes and constraints
 - Tested and applied
 
 ### Templates
 
-#### Base Template (`aline_uwamahoro/templates/aline_uwamahoro/base.html`)
+#### Base Template (`aline/templates/aline/base.html`)
 
 **Status**: ✅ Created  
 **Lines**: 350+  
@@ -147,7 +147,7 @@
 - Template blocks for content
 - Mobile-friendly navigation
 
-#### Home Template (`aline_uwamahoro/templates/aline_uwamahoro/home.html`)
+#### Home Template (`aline/templates/aline/home.html`)
 
 **Status**: ✅ Created  
 **Content**:
@@ -158,7 +158,7 @@
 - Call-to-action buttons
 - Responsive grid layout
 
-#### Register Template (`aline_uwamahoro/templates/aline_uwamahoro/register.html`)
+#### Register Template (`aline/templates/aline/register.html`)
 
 **Status**: ✅ Created  
 **Content**:
@@ -171,7 +171,7 @@
 - Password strength hints
 - Login link
 
-#### Login Template (`aline_uwamahoro/templates/aline_uwamahoro/login.html`)
+#### Login Template (`aline/templates/aline/login.html`)
 
 **Status**: ✅ Created  
 **Content**:
@@ -184,7 +184,7 @@
 - Registration link
 - Demo credentials info box
 
-#### Dashboard Template (`aline_uwamahoro/templates/aline_uwamahoro/dashboard.html`)
+#### Dashboard Template (`aline/templates/aline/dashboard.html`)
 
 **Status**: ✅ Created  
 **Content**:
@@ -197,7 +197,7 @@
 - Portal statistics
 - Security information alert
 
-#### Profile Template (`aline_uwamahoro/templates/aline_uwamahoro/profile.html`)
+#### Profile Template (`aline/templates/aline/profile.html`)
 
 **Status**: ✅ Created  
 **Content**:
@@ -211,7 +211,7 @@
 - Student ID (read-only)
 - Success/error messages
 
-#### Password Change Template (`aline_uwamahoro/templates/aline_uwamahoro/password_change.html`)
+#### Password Change Template (`aline/templates/aline/password_change.html`)
 
 **Status**: ✅ Created  
 **Content**:
@@ -226,7 +226,7 @@
 
 ### Management Commands
 
-#### Sample Data Command (`aline_uwamahoro/management/commands/create_sample_students.py`)
+#### Sample Data Command (`aline/management/commands/create_sample_students.py`)
 
 **Status**: ✅ Created  
 **Lines**: 105  
@@ -252,11 +252,11 @@
 **Status**: ✅ Modified  
 **Changes**:
 
-- Added `'aline_uwamahoro'` to INSTALLED_APPS
+- Added `'aline'` to INSTALLED_APPS
 - Added authentication URL settings:
-  - `LOGIN_URL = 'aline_uwamahoro:login'`
-  - `LOGIN_REDIRECT_URL = 'aline_uwamahoro:dashboard'`
-  - `LOGOUT_REDIRECT_URL = 'aline_uwamahoro:home'`
+  - `LOGIN_URL = 'aline:login'`
+  - `LOGIN_REDIRECT_URL = 'aline:dashboard'`
+  - `LOGOUT_REDIRECT_URL = 'aline:home'`
 - No breaking changes to existing config
 
 #### Project URLs (`devsec_demo/urls.py`)
@@ -264,14 +264,14 @@
 **Status**: ✅ Modified  
 **Changes**:
 
-- Added `path('', include('aline_uwamahoro.urls'))`
+- Added `path('', include('aline.urls'))`
 - Maintains existing admin URLs
-- Namespace: 'aline_uwamahoro'
+- Namespace: 'aline'
 
 ### Directory Structure Created
 
 ```
-aline_uwamahoro/
+aline/
 ├── management/
 │   ├── __init__.py
 │   └── commands/
@@ -280,7 +280,7 @@ aline_uwamahoro/
 ├── migrations/
 │   └── 0001_initial.py
 ├── templates/
-│   └── aline_uwamahoro/
+│   └── aline/
 │       ├── base.html
 │       ├── home.html
 │       ├── register.html
@@ -370,7 +370,7 @@ Result: ✅ No issues identified
 
 ```
 ✅ Applied: auth migrations
-✅ Applied: aline_uwamahoro.0001_initial
+✅ Applied: aline.0001_initial
 ✅ All migrations successful
 ```
 
@@ -512,7 +512,7 @@ Password: user@123
 **Step 4: Run Tests**
 
 ```bash
-python manage.py test aline_uwamahoro.tests
+python manage.py test aline.tests
 # Result: OK (24 tests pass)
 ```
 
@@ -530,7 +530,7 @@ python manage.py test aline_uwamahoro.tests
 ### For Developers
 
 1. Read [docs/AUTHENTICATION.md](docs/AUTHENTICATION.md) for architecture
-2. Review [tests.py](aline_uwamahoro/tests.py) for usage examples
+2. Review [tests.py](aline/tests.py) for usage examples
 3. Check inline code comments
 4. Follow the Quick Reference Guide for common tasks
 
@@ -637,7 +637,7 @@ python manage.py shell
 >>> User.objects.get(username='student1').set_password('newpass')
 
 # Run tests before deployment
-python manage.py test aline_uwamahoro.tests
+python manage.py test aline.tests
 
 # Check for issues
 python manage.py check

@@ -27,11 +27,11 @@ urlpatterns = [
     path('profile/', views.ProfileView.as_view(), name='profile'),
     path('change-password/', views.PasswordChangeView.as_view(), name='password_change'),
     
-    # Staff endpoints (require staff permission)
-    path('admin/users/', views.UserManagementView.as_view(), name='user_management'),
-    path('admin/users/<int:user_id>/', views.UserDetailView.as_view(), name='user_detail'),
-    path('admin/dashboard/', views.AdminDashboardView.as_view(), name='admin_dashboard'),
+    # Management endpoints (require staff/admin permission)
+    path('management/users/', views.UserManagementView.as_view(), name='user_management'),
+    path('management/users/<int:user_id>/', views.UserDetailView.as_view(), name='user_detail'),
+    path('management/dashboard/', views.AdminDashboardView.as_view(), name='admin_dashboard'),
     
     # Instructor endpoints (require instructor permission)
-    path('instructor/students/', views.StudentListView.as_view(), name='student_list'),
+    path('management/students/', views.StudentListView.as_view(), name='student_list'),
 ]

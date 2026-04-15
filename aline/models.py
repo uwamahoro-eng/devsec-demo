@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import EmailValidator
 from django.utils.translation import gettext_lazy as _
 
 
@@ -11,15 +10,12 @@ class UserProfile(models.Model):
     This model extends Django's built-in User model with application-specific
     fields for student management while maintaining security best practices.
     """
-    
-    # One-to-one relationship with Django's User model
+
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    
-    # Additional student information
     student_id = models.CharField(
         max_length=20,
         unique=True,
-        help_text=_("Unique student identifier")
+        help_text=_('Unique student identifier')
     )
     date_of_birth = models.DateField(
         null=True,
@@ -29,27 +25,21 @@ class UserProfile(models.Model):
     phone_number = models.CharField(
         max_length=20,
         blank=True,
-        help_text=_("Contact phone number")
+        help_text=_('Contact phone number')
     )
     bio = models.TextField(
         blank=True,
         max_length=500,
-        help_text=_("Brief biography or about section")
+        help_text=_('Brief biography or about section')
     )
-    
-    # Metadata
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
     class Meta:
-        verbose_name = _("user profile")
-        verbose_name_plural = _("user profiles")
+        verbose_name = _('user profile')
+        verbose_name_plural = _('user profiles')
         ordering = ['-created_at']
-    
+
     def __str__(self):
         return f"{self.user.get_full_name() or self.user.username} ({self.student_id})"
-    
-    def get_full_name(self):
-        """Return user's full name or username as fallback."""
-        return self.user.get_full_name() or self.user.username
-

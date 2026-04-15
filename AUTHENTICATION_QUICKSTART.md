@@ -62,10 +62,10 @@ For comprehensive documentation, see [docs/AUTHENTICATION.md](docs/AUTHENTICATIO
 
 ```bash
 # Run all tests
-python manage.py test aline_uwamahoro.tests
+python manage.py test aline.tests
 
 # Run with coverage
-coverage run --source='aline_uwamahoro' manage.py test
+coverage run --source='aline' manage.py test
 coverage report
 ```
 
@@ -95,11 +95,11 @@ python manage.py createsuperuser
 
 | File                         | Purpose                             |
 | ---------------------------- | ----------------------------------- |
-| `aline_uwamahoro/models.py`  | UserProfile model                   |
-| `aline_uwamahoro/forms.py`   | Registration, login, password forms |
-| `aline_uwamahoro/views.py`   | View logic (auth flow)              |
-| `aline_uwamahoro/urls.py`    | URL routing                         |
-| `aline_uwamahoro/templates/` | HTML templates                      |
+| `aline/models.py`  | UserProfile model                   |
+| `aline/forms.py`   | Registration, login, password forms |
+| `aline/views.py`   | View logic (auth flow)              |
+| `aline/urls.py`    | URL routing                         |
+| `aline/templates/` | HTML templates                      |
 | `docs/AUTHENTICATION.md`     | Full documentation                  |
 
 ---

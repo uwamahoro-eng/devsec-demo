@@ -1,4 +1,4 @@
-{% extends 'aline_uwamahoro/base.html' %} {% block title %}Login - Student
+{% extends 'aline/base.html' %} {% block title %}Login - Student
 Portal{% endblock %} {% block content %}
 <div class="auth-page">
   <div class="auth-card">
@@ -70,7 +70,7 @@ Portal{% endblock %} {% block content %}
         <!-- Registration and Links -->
         <div class="auth-link">
           Don't have an account?
-          <a href="{% url 'aline_uwamahoro:register' %}">Register here</a>
+          <a href="{% url 'aline:register' %}">Register here</a>
         </div>
 
         <!-- Demo Credentials Info -->

@@ -1,4 +1,4 @@
-{% extends 'aline_uwamahoro/base.html' %} {% block title %}Profile - Student
+{% extends 'aline/base.html' %} {% block title %}Profile - Student
 Portal{% endblock %} {% block content %}
 <div class="container">
   <div class="row mb-4">
@@ -7,7 +7,7 @@ Portal{% endblock %} {% block content %}
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item">
-            <a href="{% url 'aline_uwamahoro:dashboard' %}">Dashboard</a>
+            <a href="{% url 'aline:dashboard' %}">Dashboard</a>
           </li>
           <li class="breadcrumb-item active">Profile</li>
         </ol>
@@ -51,19 +51,19 @@ Portal{% endblock %} {% block content %}
         </div>
         <div class="list-group list-group-flush">
           <a
-            href="{% url 'aline_uwamahoro:dashboard' %}"
+            href="{% url 'aline:dashboard' %}"
             class="list-group-item list-group-item-action"
           >
             ← Back to Dashboard
           </a>
           <a
-            href="{% url 'aline_uwamahoro:password_change' %}"
+            href="{% url 'aline:password_change' %}"
             class="list-group-item list-group-item-action"
           >
             🔐 Change Password
           </a>
           <a
-            href="{% url 'aline_uwamahoro:logout' %}"
+            href="{% url 'aline:logout' %}"
             class="list-group-item list-group-item-action"
           >
             🚪 Logout
@@ -240,7 +240,7 @@ Portal{% endblock %} {% block content %}
                 Save Changes
               </button>
               <a
-                href="{% url 'aline_uwamahoro:dashboard' %}"
+                href="{% url 'aline:dashboard' %}"
                 class="btn btn-secondary"
                 >Cancel</a
               >

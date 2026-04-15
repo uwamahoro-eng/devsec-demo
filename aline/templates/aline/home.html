@@ -1,4 +1,4 @@
-{% extends 'aline_uwamahoro/base.html' %} {% block title %}Home - Student
+{% extends 'aline/base.html' %} {% block title %}Home - Student
 Portal{% endblock %} {% block content %}
 <div class="container">
   <div class="hero-section">
@@ -17,12 +17,12 @@ Portal{% endblock %} {% block content %}
           </p>
           {% if user.is_authenticated %}
           <a
-            href="{% url 'aline_uwamahoro:dashboard' %}"
+            href="{% url 'aline:dashboard' %}"
             class="btn btn-primary"
             >Go to Dashboard</a
           >
           {% else %}
-          <a href="{% url 'aline_uwamahoro:login' %}" class="btn btn-primary"
+          <a href="{% url 'aline:login' %}" class="btn btn-primary"
             >Login to Access</a
           >
           {% endif %}
@@ -38,11 +38,11 @@ Portal{% endblock %} {% block content %}
             Manage your profile information and personal details.
           </p>
           {% if user.is_authenticated %}
-          <a href="{% url 'aline_uwamahoro:profile' %}" class="btn btn-primary"
+          <a href="{% url 'aline:profile' %}" class="btn btn-primary"
             >View Profile</a
           >
           {% else %}
-          <a href="{% url 'aline_uwamahoro:register' %}" class="btn btn-primary"
+          <a href="{% url 'aline:register' %}" class="btn btn-primary"
             >Create Account</a
           >
           {% endif %}
@@ -59,12 +59,12 @@ Portal{% endblock %} {% block content %}
           </p>
           {% if user.is_authenticated %}
           <a
-            href="{% url 'aline_uwamahoro:password_change' %}"
+            href="{% url 'aline:password_change' %}"
             class="btn btn-primary"
             >Change Password</a
           >
           {% else %}
-          <a href="{% url 'aline_uwamahoro:login' %}" class="btn btn-primary"
+          <a href="{% url 'aline:login' %}" class="btn btn-primary"
             >Login Now</a
           >
           {% endif %}

@@ -40,23 +40,23 @@ The UAS follows **Django best practices** and **clean architecture** principles:
 │                   Django Request/Response Cycle          │
 ├─────────────────────────────────────────────────────────┤
 │                                                           │
-│  URLs (aline_uwamahoro/urls.py)                          │
+│  URLs (aline/urls.py)                          │
 │       ↓                                                   │
-│  Views (aline_uwamahoro/views.py)                        │
+│  Views (aline/views.py)                        │
 │    - Public Views (Home, Register, Login, Logout)       │
 │    - Protected Views (Dashboard, Profile, PwdChange)    │
 │       ↓                                                   │
-│  Forms (aline_uwamahoro/forms.py)                        │
+│  Forms (aline/forms.py)                        │
 │    - CustomUserCreationForm (Registration)              │
 │    - CustomAuthenticationForm (Login)                   │
 │    - CustomPasswordChangeForm (Password)                │
 │    - UserProfileForm (Profile Management)               │
 │       ↓                                                   │
-│  Models (aline_uwamahoro/models.py)                      │
+│  Models (aline/models.py)                      │
 │    - User (Django built-in)                              │
 │    - UserProfile (Extended profile model)                │
 │       ↓                                                   │
-│  Templates (aline_uwamahoro/templates/aline_uwamahoro/) │
+│  Templates (aline/templates/aline/) │
 │    - base.html (Template inheritance)                    │
 │    - home.html, register.html, login.html, etc.         │
 │       ↓                                                   │
@@ -89,7 +89,7 @@ The UAS follows **Django best practices** and **clean architecture** principles:
 ```python
 @method_decorator(login_required, name='dispatch')
 class DashboardView(TemplateView):
-    template_name = 'aline_uwamahoro/dashboard.html'
+    template_name = 'aline/dashboard.html'
     # Only authenticated users can access this view
 ```
 
@@ -297,16 +297,16 @@ Access the application:
 python manage.py test
 
 # Run specific test class
-python manage.py test aline_uwamahoro.tests.UserRegistrationTestCase
+python manage.py test aline.tests.UserRegistrationTestCase
 
 # Run specific test method
-python manage.py test aline_uwamahoro.tests.UserRegistrationTestCase.test_successful_registration
+python manage.py test aline.tests.UserRegistrationTestCase.test_successful_registration
 
 # Run with verbose output
 python manage.py test --verbosity=2
 
 # Run with coverage
-coverage run --source='aline_uwamahoro' manage.py test
+coverage run --source='aline' manage.py test
 coverage report
 coverage html
 ```
@@ -324,7 +324,7 @@ python manage.py migrate
 python manage.py makemigrations
 
 # Reverse migrations
-python manage.py migrate aline_uwamahoro 0001
+python manage.py migrate aline 0001
 ```
 
 ---
@@ -353,7 +353,7 @@ python manage.py migrate aline_uwamahoro 0001
 | Route                                 | Method | Description            |
 | ------------------------------------- | ------ | ---------------------- |
 | `/admin/`                             | GET    | Django admin interface |
-| `/admin/aline_uwamahoro/userprofile/` | GET    | Manage user profiles   |
+| `/admin/aline/userprofile/` | GET    | Manage user profiles   |
 
 ---
 
@@ -405,17 +405,17 @@ The implementation includes **comprehensive tests** for:
 
 ```bash
 # Run all tests
-python manage.py test aline_uwamahoro.tests
+python manage.py test aline.tests
 
 # Run specific test class
-python manage.py test aline_uwamahoro.tests.UserRegistrationTestCase
+python manage.py test aline.tests.UserRegistrationTestCase
 
 # Run with verbose output
 python manage.py test --verbosity=2
 
 # Run with coverage
 pip install coverage
-coverage run --source='aline_uwamahoro' manage.py test
+coverage run --source='aline' manage.py test
 coverage report
 coverage html  # Generate HTML report
 ```
@@ -423,17 +423,17 @@ coverage html  # Generate HTML report
 ### Example Test Output
 
 ```
-test_authenticated_user_can_access_dashboard (aline_uwamahoro.tests.AccessControlTestCase) ... ok
-test_authenticated_user_can_access_profile (aline_uwamahoro.tests.AccessControlTestCase) ... ok
-test_dashboard_requires_login (aline_uwamahoro.tests.AccessControlTestCase) ... ok
-test_invalid_login_credentials (aline_uwamahoro.tests.UserAuthenticationTestCase) ... ok
-test_logout_functionality (aline_uwamahoro.tests.UserAuthenticationTestCase) ... ok
-test_password_change_mismatch (aline_uwamahoro.tests.PasswordChangeTestCase) ... ok
-test_password_change_with_wrong_current_password (aline_uwamahoro.tests.PasswordChangeTestCase) ... ok
-test_profile_requires_login (aline_uwamahoro.tests.AccessControlTestCase) ... ok
-test_registration_with_duplicate_email (aline_uwamahoro.tests.UserRegistrationTestCase) ... ok
-test_successful_login_with_email (aline_uwamahoro.tests.UserAuthenticationTestCase) ... ok
-test_successful_password_change (aline_uwamahoro.tests.PasswordChangeTestCase) ... ok
+test_authenticated_user_can_access_dashboard (aline.tests.AccessControlTestCase) ... ok
+test_authenticated_user_can_access_profile (aline.tests.AccessControlTestCase) ... ok
+test_dashboard_requires_login (aline.tests.AccessControlTestCase) ... ok
+test_invalid_login_credentials (aline.tests.UserAuthenticationTestCase) ... ok
+test_logout_functionality (aline.tests.UserAuthenticationTestCase) ... ok
+test_password_change_mismatch (aline.tests.PasswordChangeTestCase) ... ok
+test_password_change_with_wrong_current_password (aline.tests.PasswordChangeTestCase) ... ok
+test_profile_requires_login (aline.tests.AccessControlTestCase) ... ok
+test_registration_with_duplicate_email (aline.tests.UserRegistrationTestCase) ... ok
+test_successful_login_with_email (aline.tests.UserAuthenticationTestCase) ... ok
+test_successful_password_change (aline.tests.PasswordChangeTestCase) ... ok
 
 Ran 32 tests in 0.234s
 
@@ -460,7 +460,7 @@ python manage.py shell
 
 ```python
 from django.contrib.auth.models import User
-from aline_uwamahoro.models import UserProfile
+from aline.models import UserProfile
 
 # Create user
 user = User.objects.create_user(
@@ -575,7 +575,7 @@ All sample accounts use password: **`user@123`**
 ### App Directory Layout
 
 ```
-aline_uwamahoro/
+aline/
 ├── migrations/                          # Database migrations
 │   └── 0001_initial.py
 │
@@ -584,7 +584,7 @@ aline_uwamahoro/
 │       └── create_sample_students.py    # CLI command to load sample data
 │
 ├── templates/
-│   └── aline_uwamahoro/
+│   └── aline/
 │       ├── base.html                    # Base template (template inheritance)
 │       ├── home.html                    # Public home page
 │       ├── register.html                # Registration form
@@ -629,7 +629,7 @@ aline_uwamahoro/
 
 #### `urls.py`
 
-App-level URL routing with namespace 'aline_uwamahoro'
+App-level URL routing with namespace 'aline'
 
 #### `tests.py`
 

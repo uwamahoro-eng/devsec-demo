@@ -88,10 +88,10 @@ Group
 | `/dashboard/` | GET | Authenticated | Personal dashboard |
 | `/profile/` | GET, POST | Authenticated | User profile |
 | `/change-password/` | GET, POST | Authenticated | Change password |
-| `/admin/dashboard/` | GET | Admin | Admin statistics |
-| `/admin/users/` | GET | Staff+ | User management list |
-| `/admin/users/<id>/` | GET, POST | Staff+ | User detail & role assignment |
-| `/instructor/students/` | GET | Instructor+ | Student list |
+| `/management/dashboard/` | GET | Admin | Admin statistics |
+| `/management/users/` | GET | Staff+ | User management list |
+| `/management/users/<id>/` | GET, POST | Staff+ | User detail & role assignment |
+| `/management/students/` | GET | Instructor+ | Student list |
 
 ## Access Control Enforcement
 
@@ -210,7 +210,7 @@ python manage.py test aline.tests_rbac -v 2
 
 #### Via User Detail View
 
-1. Staff/Admin navigate to `/admin/users/`
+1. Staff/Admin navigate to `/management/users/`
 2. Click "Manage" on a user
 3. Select roles via checkboxes
 4. Click "Save Changes"
