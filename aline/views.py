@@ -280,6 +280,10 @@ class UserDetailView(View):
         profile = get_object_or_404(UserProfile, user=user)
         user_groups = user.groups.all()
         
+        # IDOR/Object-level check: Staff can view everyone, 
+        # but we add explicit logging or restrictions if needed.
+        # For now, we allow staff to view, but we'll restrict modification.
+        
         return render(request, self.template_name, {
             'user': user,
             'profile': profile,
@@ -293,22 +297,44 @@ class UserDetailView(View):
     
     def post(self, request, user_id, *args, **kwargs):
         """Update user groups and basic info."""
-        user = get_object_or_404(User, pk=user_id)
+        target_user = get_object_or_404(User, pk=user_id)
+        
+        # IDOR/Privilege Escalation Protection:
+        # 1. Non-admins cannot modify Admin users
+        # 2. Non-admins cannot assign anyone to the Admin or Staff groups
+        
+        current_user_is_admin = is_admin(request.user)
+        target_user_is_admin = is_admin(target_user)
+        
+        if not current_user_is_admin:
+            if target_user_is_admin:
+                messages.error(request, 'You do not have permission to modify an administrator account.')
+                return HttpResponseForbidden('Permission Denied')
+            
+            # Check if attempting to add to privileged groups
+            group_ids = request.POST.getlist('groups')
+            privileged_groups = Group.objects.filter(name__in=['Admin', 'Staff'])
+            privileged_group_ids = [str(g.id) for g in privileged_groups]
+            
+            for g_id in group_ids:
+                if g_id in privileged_group_ids:
+                    messages.error(request, 'You do not have permission to assign privileged roles.')
+                    return HttpResponseForbidden('Permission Denied')
         
         # Get group IDs from POST data
         group_ids = request.POST.getlist('groups')
         
         # Only staff/admin can modify staff/superuser status
-        if is_admin(request.user):
-            user.is_staff = request.POST.get('is_staff') == 'on'
-            user.is_superuser = request.POST.get('is_superuser') == 'on'
+        if current_user_is_admin:
+            target_user.is_staff = request.POST.get('is_staff') == 'on'
+            target_user.is_superuser = request.POST.get('is_superuser') == 'on'
         
         # Update user groups
-        user.groups.set(Group.objects.filter(id__in=group_ids))
-        user.save()
+        target_user.groups.set(Group.objects.filter(id__in=group_ids))
+        target_user.save()
         
-        messages.success(request, f'Updated user {user.username} successfully.')
-        return redirect('aline:user_detail', user_id=user.id)
+        messages.success(request, f'Updated user {target_user.username} successfully.')
+        return redirect('aline:user_detail', user_id=target_user.id)
 
 
 @method_decorator(admin_required, name='dispatch')
