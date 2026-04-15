@@ -99,11 +99,10 @@ Portal{% endblock %} {% block content %}
         <div class="card-body text-center">
           <h5 class="card-title">Logout</h5>
           <p class="card-text">Sign out from your account securely.</p>
-          <a
-            href="{% url 'aline:logout' %}"
-            class="btn btn-outline-danger"
-            >Logout</a
-          >
+          <form action="{% url 'aline:logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger">Logout</button>
+          </form>
         </div>
       </div>
     </div>

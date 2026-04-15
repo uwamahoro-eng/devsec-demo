@@ -133,7 +133,7 @@ class UserAuthenticationTestCase(TestCase):
         self.client.login(username='testuser', password='TestPass123!')
         response = self.client.get(self.dashboard_url)
         self.assertTrue(response.wsgi_request.user.is_authenticated)
-        response = self.client.get(self.logout_url, follow=True)
+        response = self.client.post(self.logout_url, follow=True)
         self.assertFalse(response.wsgi_request.user.is_authenticated)
 
 

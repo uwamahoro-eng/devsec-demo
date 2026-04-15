@@ -62,12 +62,12 @@ Portal{% endblock %} {% block content %}
           >
             🔐 Change Password
           </a>
-          <a
-            href="{% url 'aline:logout' %}"
-            class="list-group-item list-group-item-action"
-          >
-            🚪 Logout
-          </a>
+          <div class="list-group-item">
+            <form action="{% url 'aline:logout' %}" method="post" style="display: list-item;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-link text-danger p-0 border-0" style="text-decoration: none;">🚪 Logout</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

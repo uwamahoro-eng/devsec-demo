@@ -150,6 +150,19 @@ class LogoutView(View):
     User logout view.
     """
     def get(self, request):
+        """
+        Prevent logout via GET to protect against CSRF.
+        Redirects to dashboard if authenticated, else home.
+        """
+        if request.user.is_authenticated:
+            messages.warning(request, 'Please use the logout button to sign out securely.')
+            return redirect('aline:dashboard')
+        return redirect('aline:home')
+
+    def post(self, request):
+        """
+        Handle logout via POST with CSRF protection.
+        """
         if request.user.is_authenticated:
             username = request.user.username
             logout(request)
