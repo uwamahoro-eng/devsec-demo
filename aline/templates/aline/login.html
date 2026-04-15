@@ -72,6 +72,10 @@ Portal{% endblock %} {% block content %}
           Don't have an account?
           <a href="{% url 'aline:register' %}">Register here</a>
         </div>
+        <div class="auth-link mt-2">
+          Forgot your password?
+          <a href="{% url 'aline:password_reset' %}">Reset it here</a>
+        </div>
 
         <!-- Demo Credentials Info -->
         <div class="alert alert-info mt-3 mb-0" role="alert">
