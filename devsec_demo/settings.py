@@ -132,3 +132,28 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Email configuration for development
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'webmaster@localhost'
+
+# Audit Logging Configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'audit': {
+            'format': '[{asctime}] AUDIT {levelname}: {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console_audit': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'audit',
+        },
+    },
+    'loggers': {
+        'aline.audit': {
+            'handlers': ['console_audit'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}

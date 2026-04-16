@@ -25,7 +25,7 @@ urlpatterns = [
     
     # Password Reset Flow
     path('password-reset/', 
-         auth_views.PasswordResetView.as_view(template_name='aline/registration/password_reset_form.html',
+         views.CustomPasswordResetView.as_view(template_name='aline/registration/password_reset_form.html',
                                              email_template_name='aline/registration/password_reset_email.html',
                                              success_url=reverse_lazy('aline:password_reset_done')), 
          name='password_reset'),
@@ -33,7 +33,7 @@ urlpatterns = [
          auth_views.PasswordResetDoneView.as_view(template_name='aline/registration/password_reset_done.html'), 
          name='password_reset_done'),
     path('password-reset-confirm/<uidb64>/<token>/', 
-         auth_views.PasswordResetConfirmView.as_view(template_name='aline/registration/password_reset_confirm.html',
+         views.CustomPasswordResetConfirmView.as_view(template_name='aline/registration/password_reset_confirm.html',
                                                     success_url=reverse_lazy('aline:password_reset_complete')), 
          name='password_reset_confirm'),
     path('password-reset-complete/', 

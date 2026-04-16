@@ -1,3 +1,4 @@
+import logging
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.views.generic import TemplateView, ListView
@@ -28,8 +29,11 @@ from .decorators import (
     admin_required,
     staff_required,
     instructor_required,
+    instructor_required,
     RoleRequiredMixin
 )
+
+audit_logger = logging.getLogger('aline.audit')
 
 
 class HomeView(TemplateView):
@@ -78,6 +82,7 @@ class RegisterView(View):
             try:
                 with transaction.atomic():
                     user = form.save()
+                    audit_logger.info(f"Account Registration - Username: {user.username}, IP: {request.META.get('REMOTE_ADDR')}, Status: Success")
                     messages.success(
                         request,
                         f'Welcome, {user.username}! Your account has been created. Please log in.'
@@ -119,6 +124,7 @@ class LoginView(View):
         TIMEOUT = 600  # 10 minutes
         
         if user_attempts >= MAX_ATTEMPTS or ip_attempts >= MAX_ATTEMPTS:
+            audit_logger.warning(f"Login Lockout - Username: {username}, IP: {ip_address}")
             messages.error(request, 'Too many failed login attempts. Please try again in 10 minutes.')
             return render(request, self.template_name, {
                 'form': self.form_class(),
@@ -129,6 +135,8 @@ class LoginView(View):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
+            
+            audit_logger.info(f"Login - Username: {user.username}, IP: {ip_address}, Status: Success")
             
             # Reset attempts on success
             cache.delete(user_key)
@@ -157,6 +165,8 @@ class LoginView(View):
         cache.set(user_key, user_attempts + 1, TIMEOUT)
         cache.set(ip_key, ip_attempts + 1, TIMEOUT)
         
+        audit_logger.warning(f"Login - Username: {username}, IP: {ip_address}, Status: Failure")
+        
         messages.error(request, 'Invalid username/email or password.')
         return render(request, self.template_name, {'form': form})
 
@@ -182,6 +192,7 @@ class LogoutView(View):
         if request.user.is_authenticated:
             username = request.user.username
             logout(request)
+            audit_logger.info(f"Logout - Username: {username}, IP: {request.META.get('REMOTE_ADDR')}")
             messages.success(request, f'You have been logged out. Goodbye, {username}!')
         return redirect('aline:home')
 
@@ -282,12 +293,25 @@ class PasswordChangeView(View):
             user = form.save()
             from django.contrib.auth import update_session_auth_hash
             update_session_auth_hash(request, user)
+            audit_logger.info(f"Password Change - Username: {user.username}, IP: {request.META.get('REMOTE_ADDR')}, Status: Success")
             messages.success(request, 'Your password has been changed successfully.')
             return redirect('aline:profile')
         context = {'form': form}
         context.update(self._get_role_context())
         return render(request, self.template_name, context)
 
+from django.contrib.auth import views as auth_views
+
+class CustomPasswordResetView(auth_views.PasswordResetView):
+    def form_valid(self, form):
+        email = form.cleaned_data.get('email')
+        audit_logger.info(f"Password Reset Requested - Email: {email}, IP: {self.request.META.get('REMOTE_ADDR')}")
+        return super().form_valid(form)
+
+class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    def form_valid(self, form):
+        audit_logger.info(f"Password Reset Completed - Username: {self.user.username}, IP: {self.request.META.get('REMOTE_ADDR')}")
+        return super().form_valid(form)
 
 # ============================================================================
 # STAFF AND ADMIN VIEWS (Require appropriate permissions)
@@ -393,6 +417,8 @@ class UserDetailView(View):
         # Update user groups
         target_user.groups.set(Group.objects.filter(id__in=group_ids))
         target_user.save()
+        
+        audit_logger.info(f"Privilege Change - Target: {target_user.username}, Actor: {request.user.username}, New Groups: {group_ids}, Staff: {target_user.is_staff}, Admin: {target_user.is_superuser}")
         
         messages.success(request, f'Updated user {target_user.username} successfully.')
         return redirect('aline:user_detail', user_id=target_user.id)
