@@ -11,6 +11,7 @@ from django.db import transaction
 from django.http import HttpResponseForbidden
 from django.core.paginator import Paginator
 from django.core.cache import cache
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from .forms import (
     CustomUserCreationForm,
@@ -134,7 +135,22 @@ class LoginView(View):
             cache.delete(ip_key)
             
             messages.success(request, f'Welcome back, {user.username}!')
-            next_url = request.GET.get('next') or request.POST.get('next') or reverse_lazy('aline:dashboard')
+            
+            # Open Redirect Protection: Validate the 'next' parameter
+            next_url = request.GET.get('next') or request.POST.get('next')
+            
+            # If next_url is provided, validate it. If it's unsafe, fallback to dashboard.
+            if next_url:
+                is_safe = url_has_allowed_host_and_scheme(
+                    url=next_url,
+                    allowed_hosts={request.get_host()},
+                    require_https=request.is_secure(),
+                )
+                if not is_safe:
+                    next_url = reverse_lazy('aline:dashboard')
+            else:
+                next_url = reverse_lazy('aline:dashboard')
+                
             return redirect(next_url)
             
         # Increment attempts on failure
