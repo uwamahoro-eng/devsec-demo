@@ -52,4 +52,7 @@ urlpatterns = [
     
     # Instructor endpoints (require instructor permission)
     path('management/students/', views.StudentListView.as_view(), name='student_list'),
+    
+    # Secure File Serving
+    path('secure-media/documents/<int:user_id>/<str:filename>/', views.ServeAcademicDocumentView.as_view(), name='serve_academic_document'),
 ]

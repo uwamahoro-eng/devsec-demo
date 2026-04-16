@@ -133,6 +133,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'webmaster@localhost'
 
+# Media files (User-uploaded content)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# File upload constraints (DoS mitigation)
+# 2.5MB for in-memory, larger files go to disk
+FILE_UPLOAD_MAX_MEMORY_SIZE = 2621440 
+# Total request size limit (10MB)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760
+
 # Audit Logging Configuration
 LOGGING = {
     'version': 1,
