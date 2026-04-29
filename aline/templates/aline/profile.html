@@ -1,5 +1,7 @@
-{% extends 'aline/base.html' %} {% block title %}Profile - Student
-Portal{% endblock %} {% block content %}
+{% extends 'aline/base.html' %} 
+{% load aline_tags %}
+{% block title %}Profile - Student Portal{% endblock %}
+{% block content %}
 <div class="container">
   <div class="row mb-4">
     <div class="col-12">
@@ -23,7 +25,11 @@ Portal{% endblock %} {% block content %}
           <h5>{{ profile.get_full_name }}</h5>
         </div>
         <div class="card-body text-center">
-          <div style="font-size: 3rem; margin-bottom: 1rem">👤</div>
+          {% if profile.avatar %}
+            <img src="{{ profile.avatar.url }}" alt="Profile Picture" class="img-fluid rounded-circle mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+          {% else %}
+            <div style="font-size: 3rem; margin-bottom: 1rem">👤</div>
+          {% endif %}
           <p class="mb-2">
             <strong>Username:</strong><br />
             {{ user.username }}
@@ -94,7 +100,7 @@ Portal{% endblock %} {% block content %}
           <h5 class="mb-0">Edit Profile Information</h5>
         </div>
         <div class="card-body">
-          <form method="post" novalidate>
+          <form method="post" enctype="multipart/form-data" novalidate>
             {% csrf_token %}
 
             <!-- First Name -->
@@ -216,6 +222,33 @@ Portal{% endblock %} {% block content %}
               <div class="text-danger small">
                 {{ form.date_of_birth.errors|first }}
               </div>
+              {% endif %}
+            </div>
+
+            <!-- Avatar Upload -->
+            <div class="mb-3">
+              <label for="{{ form.avatar.id_for_label }}" class="form-label">Profile Picture</label>
+              {{ form.avatar }}
+              <small class="form-text text-muted">JPEG/PNG, max 2MB</small>
+              {% if form.avatar.errors %}
+                <div class="text-danger small">{{ form.avatar.errors|first }}</div>
+              {% endif %}
+            </div>
+
+            <!-- Academic Document Upload -->
+            <div class="mb-3">
+              <label for="{{ form.academic_document.id_for_label }}" class="form-label">Academic Document</label>
+              {{ form.academic_document }}
+              <small class="form-text text-muted">PDF/DOCX, max 5MB</small>
+              {% if profile.academic_document %}
+                <div class="mt-1">
+                  {% with filename=profile.academic_document.name|basename %}
+                  <small>Current: <a href="{% url 'aline:serve_academic_document' user_id=user.id filename=filename %}" target="_blank">View Uploaded Document</a></small>
+                  {% endwith %}
+                </div>
+              {% endif %}
+              {% if form.academic_document.errors %}
+                <div class="text-danger small">{{ form.academic_document.errors|first }}</div>
               {% endif %}
             </div>
 

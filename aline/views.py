@@ -250,11 +250,29 @@ class ProfileView(View):
 
     def post(self, request, *args, **kwargs):
         profile = get_object_or_404(UserProfile, user=request.user)
-        form = self.form_class(request.POST, instance=profile)
+        # Pass request.FILES to the form
+        form = self.form_class(request.POST, request.FILES, instance=profile)
         if form.is_valid():
+            # Check which files were uploaded for audit logging
+            avatar_uploaded = 'avatar' in request.FILES
+            doc_uploaded = 'academic_document' in request.FILES
+            
             form.save()
+            
+            ip_address = request.META.get('REMOTE_ADDR')
+            if avatar_uploaded:
+                audit_logger.info(f"File Upload - User: {request.user.username}, Type: Avatar, IP: {ip_address}, Status: Success")
+            if doc_uploaded:
+                audit_logger.info(f"File Upload - User: {request.user.username}, Type: Academic Document, IP: {ip_address}, Status: Success")
+            
             messages.success(request, 'Your profile has been updated successfully.')
             return redirect('aline:profile')
+        
+        # Log validation failures for files
+        if form.errors.get('avatar') or form.errors.get('academic_document'):
+            ip_address = request.META.get('REMOTE_ADDR')
+            audit_logger.warning(f"File Upload - User: {request.user.username}, IP: {ip_address}, Status: Validation Failure, Errors: {form.errors}")
+            
         context = {
             'profile': profile,
             'form': form,
@@ -483,3 +501,41 @@ class StudentListView(ListView):
         context['is_instructor'] = is_instructor_or_above(self.request.user)
         context['total_students'] = User.objects.filter(groups__name='Student').count()
         return context
+
+
+from django.http import FileResponse, HttpResponseForbidden
+import os
+
+@method_decorator(login_required, name='dispatch')
+class ServeAcademicDocumentView(View):
+    """
+    Securely serve academic documents with permission checks.
+    
+    Access Control Rules:
+    - Students can only access their own documents.
+    - Instructors and Staff can access any student's documents.
+    """
+    def get(self, request, user_id, filename):
+        # 1. Permission Check: Is the user authorized?
+        is_owner = request.user.id == int(user_id)
+        is_authorized_staff = is_staff_or_admin(request.user) or is_instructor_or_above(request.user)
+        
+        if not (is_owner or is_authorized_staff):
+            audit_logger.warning(f"Unauthorized Document Access Attempt - Actor: {request.user.username}, Target User ID: {user_id}, File: {filename}, IP: {request.META.get('REMOTE_ADDR')}")
+            return HttpResponseForbidden("You do not have permission to view this document.")
+        
+        # 2. Retrieve the profile and verify the file exists on the profile
+        # This prevents users from guessing filenames of other users even if they know the directory.
+        profile = get_object_or_404(UserProfile, user_id=user_id)
+        
+        # Verify the filename matches what's stored (additional layer of security)
+        if not profile.academic_document or os.path.basename(profile.academic_document.name) != filename:
+            return redirect('aline:dashboard') # Or 404
+            
+        file_path = profile.academic_document.path
+        if not os.path.exists(file_path):
+            return redirect('aline:dashboard')
+            
+        # 3. Serve the file
+        audit_logger.info(f"Document Accessed - Actor: {request.user.username}, Target User ID: {user_id}, File: {filename}, IP: {request.META.get('REMOTE_ADDR')}")
+        return FileResponse(open(file_path, 'rb'), content_type='application/pdf')
