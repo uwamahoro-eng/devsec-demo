@@ -74,6 +74,21 @@ Portal{% endblock %} {% block content %}
 
     <!-- Edit Profile Form -->
     <div class="col-lg-8 col-md-6">
+
+      <!-- Bio Preview (read-only, auto-escaped) -->
+      {% if profile.bio %}
+      <div class="card mb-3">
+        <div class="card-header">
+          <h5 class="mb-0">About You</h5>
+        </div>
+        <div class="card-body">
+          <!-- SECURITY NOTE: profile.bio is user-supplied. Rendered without
+               |safe so Django auto-escaping converts < > " & to HTML entities. -->
+          <p id="bio-display" class="mb-0">{{ profile.bio }}</p>
+        </div>
+      </div>
+      {% endif %}
+
       <div class="card">
         <div class="card-header">
           <h5 class="mb-0">Edit Profile Information</h5>

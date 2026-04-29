@@ -48,6 +48,16 @@
                 <td>{{ user.last_login|date:"M d, Y h:i A"|default:'Never' }}</td>
               </tr>
               <tr>
+                <td><strong>Bio:</strong></td>
+                <td>
+                  <!-- SECURITY NOTE: user-supplied bio is rendered with Django's
+                       default auto-escaping (no |safe filter). Characters such as
+                       < > " ' & are converted to HTML entities before reaching
+                       the browser, preventing stored XSS. -->
+                  {{ profile.bio|default:'-' }}
+                </td>
+              </tr>
+              <tr>
                 <td><strong>Status:</strong></td>
                 <td>
                   {% if user.is_active %}
