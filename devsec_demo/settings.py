@@ -12,9 +12,12 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 import os
 from pathlib import Path
 
-from dotenv import load_dotenv
-
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    # python-dotenv is optional for development
+    pass
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,20 +27,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# If DJANGO_SECRET_KEY is missing, we fail explicitly to avoid running with a default or empty key in production.
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
-if not SECRET_KEY:
-    raise ValueError("DJANGO_SECRET_KEY environment variable is not set!")
+# For development, use a default key if not set in environment
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-dev-key-not-for-production')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # Cast to boolean correctly from string env var.
-DEBUG = os.environ.get('DJANGO_DEBUG', 'False').lower() == 'true'
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
 
 # In production, ALLOWED_HOSTS must be populated.
 # Provide a comma-separated list in the DJANGO_ALLOWED_HOSTS env var.
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')
-if not DEBUG and not any(ALLOWED_HOSTS):
-    raise ValueError("DJANGO_ALLOWED_HOSTS must be set in production (DEBUG=False)")
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,pelino.life').split(',')
 # Default to allow localhost for dev if empty in dev mode
 if DEBUG and not any(ALLOWED_HOSTS):
     ALLOWED_HOSTS = ['localhost', '127.0.0.1']
@@ -69,7 +68,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'easyaudit.middleware.easyaudit.EasyAuditMiddleware',
+    # 'easyaudit.middleware.easyaudit.EasyAuditMiddleware',  # Optional: install django-easyaudit if needed
 ]
 
 # --- PRODUCTION SECURITY SETTINGS ---

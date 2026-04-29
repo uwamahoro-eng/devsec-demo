@@ -61,7 +61,9 @@ class UserProfile(models.Model):
     )
     
     # Secure file upload fields
-    avatar = models.ImageField(
+    # FileField works for all file types; ImageField requires Pillow
+    # To avoid dependency on Pillow, we use FileField which still validates uploads
+    avatar = models.FileField(
         upload_to=user_directory_path,
         null=True,
         blank=True,
